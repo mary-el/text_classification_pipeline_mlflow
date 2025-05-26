@@ -1,0 +1,24 @@
+model:
+  pretrained_name: "cointegrated/rubert-tiny"
+  labels: ["clientError", "operation", "other", "document", "sms", "vtbo"]
+
+training:
+  learning_rate: 2e-5
+  batch_size: 128
+  num_epochs: 40
+  weight_decay: 0.01
+  save_total_limit: 5
+  output_path: results
+  logs: logs
+
+data:
+  path: "data/df_12k.csv"
+  text_column: "text"
+  label_column: "label"
+  split_column: "split"
+  val_split: 0.2
+  max_text_length: 512
+
+logging:
+  uri: "http://localhost:5000"
+  experiment_name: "bert-text-classification-12k"
