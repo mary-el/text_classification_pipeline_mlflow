@@ -1,13 +1,14 @@
-from src.load_data import load_data
-from src.train import train_model
-from src.mlflow_logging import setup_mlflow
-from src.utils import load_config
-from src.evaluate import evaluate_model
-from src.model import get_model
-
 import argparse
+
 import mlflow
 from transformers import pipeline
+
+from src.evaluate import evaluate_model
+from src.load_data import load_data
+from src.mlflow_logging import setup_mlflow
+from src.model import get_model, save_model
+from src.train import train_model
+from src.utils import load_config
 
 
 def main(config_path="configs/params.yaml", eval=False):
@@ -22,12 +23,14 @@ def main(config_path="configs/params.yaml", eval=False):
         # Обучение
         if not eval:
             model = train_model(model, train_dataset, val_dataset, config)
+            save_model(model, tokenizer, config)
+            pipe = pipeline("text-classification", model=model, tokenizer=tokenizer)
+            # Логирование лучшей модели
+            mlflow.transformers.log_model(pipe, "model")
         # Оценка на тесте
         evaluate_model(model, test_dataset, config)
         # Создание пайплайна
-        pipe = pipeline("text-classification", model=model, tokenizer=tokenizer)
-        # Логирование лучшей модели
-        mlflow.transformers.log_model(pipe, "model")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

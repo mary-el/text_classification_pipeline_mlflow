@@ -14,3 +14,8 @@ def get_model(config):
     ).to(device)
     tokenizer = AutoTokenizer.from_pretrained(config["model"]["pretrained_name"])
     return model, tokenizer
+
+def save_model(model, tokenizer, config):
+    model.save_pretrained(config["model"]["save_to"])
+    tokenizer.save_pretrained(config["model"]["save_to"])
+    print(f"Saved model to {config["model"]["save_to"]}")
