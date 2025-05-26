@@ -1,0 +1,8 @@
+data/
+mlruns/
+results/
+*.db
+*.csv
+*.png
+.idea
+*/__pycache__/
