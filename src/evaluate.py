@@ -58,7 +58,9 @@ def evaluate_model(model, test_dataset, config):
 
     # Логирование метрик в MLflow
     mlflow.log_metrics(metrics)
-
+    # Логирование результатов теста
+    pd.DataFrame({'true_label': y_test, 'pred_label': y_pred}).to_csv("results.csv")
+    mlflow.log_artifact('results.csv', artifact_path="reports")
     # Генерация и сохранение confusion matrix
     cm = confusion_matrix(y_test, y_pred)
     save_confusion_matrix(cm, config['model']['labels'])
