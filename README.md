@@ -1,4 +1,8 @@
 ## Run Mlflow locally:
+* Set AWS environment:
+  * AWS_ACCESS_KEY_ID
+  * AWS_SECRET_ACCESS_KEY
+  * MLFLOW_S3_ENDPOINT_URL
 ```bash
 mlflow ui --backend-store-uri sqlite:///mlflow.db --default-artifact-root ./mlruns
 ```

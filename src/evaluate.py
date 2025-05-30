@@ -3,6 +3,7 @@ import mlflow
 import numpy as np
 import pandas as pd
 import seaborn as sns
+import torch
 from sklearn.metrics import (
     accuracy_score,
     precision_score,
@@ -12,7 +13,6 @@ from sklearn.metrics import (
     classification_report
 )
 from torch.utils.data import DataLoader
-import torch
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 

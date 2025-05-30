@@ -26,6 +26,7 @@ def load_data(tokenizer, config):
     if "split_column" in config["data"]:  # если сплит не задан, задаём сами
         split_column = config["data"]["split_column"]
     else:
+        print("Creating split")
         split_column = "split"
         df[split_column] = np.random.choice(['train', 'val', 'test'], len(df), p=[0.7, 0.2, 0.1])
 
@@ -51,8 +52,9 @@ def load_data(tokenizer, config):
     encodings_val = process_texts(texts_val, tokenizer, config)
     encodings_test = process_texts(texts_test, tokenizer, config)
 
-    train_dataset = TextClassificationDataset(encodings_train, labels_train)
-    val_dataset = TextClassificationDataset(encodings_val, labels_val)
-    test_dataset = TextClassificationDataset(encodings_test, labels_test)
+    classes = config["model"]["labels"]
+    train_dataset = TextClassificationDataset(encodings_train, labels_train, classes)
+    val_dataset = TextClassificationDataset(encodings_val, labels_val, classes)
+    test_dataset = TextClassificationDataset(encodings_test, labels_test, classes)
 
     return train_dataset, val_dataset, test_dataset

@@ -10,8 +10,12 @@ from src.model import get_model, save_model
 from src.train import train_model
 from src.utils import load_config
 
+from dotenv import load_dotenv
+
 
 def main(config_path="configs/params.yaml", eval=False):
+    load_dotenv()
+
     config = load_config(config_path)
     setup_mlflow(config)
 

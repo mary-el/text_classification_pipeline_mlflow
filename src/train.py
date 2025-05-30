@@ -1,15 +1,15 @@
+import time
+
 import mlflow
-import torch
 from transformers import Trainer, TrainingArguments
+from transformers.integrations import MLflowCallback
 
 from src.evaluate import compute_metrics
-
-device = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 def train_model(model, train_data, val_data, config):
     training_args = TrainingArguments(
-        output_dir=config["training"]["output_path"],
+        output_dir=config["training"]["output_path"] + '/' + time.strftime("%Y-%m-%d-%H-%M-%S"),
         eval_strategy="epoch",
         save_strategy="epoch",
         learning_rate=float(config["training"]["learning_rate"]),
@@ -30,6 +30,7 @@ def train_model(model, train_data, val_data, config):
         train_dataset=train_data,
         eval_dataset=val_data,
         compute_metrics=compute_metrics,
+        callbacks=[MLflowCallback()]
     )
     mlflow.log_params({**config["training"], **config["data"], **config["model"]})
     trainer.train()

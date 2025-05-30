@@ -1,20 +1,20 @@
 model:
 #  pretrained_name: "cointegrated/rubert-tiny"
-  pretrained_name: "models/aug"
-  labels: ["clientError", "operation", "other", "document", "sms", "vtbo"]
-  save_to: models/best
+  pretrained_name: "models/best_6c"
+  labels: ["errorClient", "operation", "other", "document", "sms", "vtbo", "cashback", "transfer"]
+  save_to: models/best_6c
 
 training:
   learning_rate: 2e-5
   batch_size: 64
-  num_epochs: 1
+  num_epochs: 50
   weight_decay: 0.01
   save_total_limit: 5
   output_path: results
   logs: logs
 
 data:
-  path: "data/df_12k.csv"
+  path: "data/df_12k_6c.csv"
   text_column: "text"
   label_column: "label"
   split_column: "split"
