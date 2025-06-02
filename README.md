@@ -6,7 +6,7 @@
   * AWS_S3_DISABLE_CHECKSUM=true
   * S3_PATH
 ```bash
-mlflow ui --backend-store-uri sqlite:///mlflow.db --default-artifact-root ./mlruns
+start-mlflow.cmd
 ```
 ## Set paramenters in config file
 * model
