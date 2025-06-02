@@ -1,10 +1,13 @@
 ## Run Mlflow locally:
-* Set environment:
+* Set environment in `.env`:
   * AWS_ACCESS_KEY_ID
   * AWS_SECRET_ACCESS_KEY
   * MLFLOW_S3_ENDPOINT_URL
   * AWS_S3_DISABLE_CHECKSUM=true
   * S3_PATH
+  * DATABASE
+  * HOST
+  * PORT
 ```bash
 start-mlflow.cmd
 ```
