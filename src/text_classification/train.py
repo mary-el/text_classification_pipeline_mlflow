@@ -4,7 +4,7 @@ import mlflow
 from transformers import Trainer, TrainingArguments
 from transformers.integrations import MLflowCallback
 
-from src.evaluate import compute_metrics
+from src.text_classification.evaluate import compute_metrics
 
 
 def train_model(model, train_data, val_data, config):

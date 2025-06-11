@@ -11,7 +11,8 @@
 ```bash
 start-mlflow.cmd
 ```
-## Set paramenters in config file
+## Set parameters in config file
+### text_classification
 * model
   * pretrained_name - hf/local model
   * labels - list of classnames
@@ -21,11 +22,33 @@ start-mlflow.cmd
   * text_column
   * label_column
   * split_column (optional)
+* training
+
+### yolo
+* model
+  * name
+  * register_name
+  * pretrained
+
+* data:
+  * workspace
+  * project
+  * version
+  * model_format
+  * location
+
+* training: 
+  * https://docs.ultralytics.com/modes/train/#train-settings
+
+## Download dataset (for YOLO)
+```commandline
+python src\yolo\download_dataset.py
+```
 
 ## Run training pipeline:
 
 ```bash
-python src\main.py
+python src\*\main.py
 ```
 ```        
 usage: main.py [-h] [--eval] [--config CONFIG]

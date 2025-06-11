@@ -3,11 +3,11 @@ import argparse
 import mlflow
 from transformers import pipeline
 
-from src.evaluate import evaluate_model
-from src.load_data import load_data
+from src.text_classification.evaluate import evaluate_model
+from src.text_classification.load_data import load_data
 from src.mlflow_logging import setup_mlflow
-from src.model import get_model, save_model
-from src.train import train_model
+from src.text_classification.model import get_model, save_model
+from src.text_classification.train import train_model
 from src.utils import load_config
 
 from dotenv import load_dotenv

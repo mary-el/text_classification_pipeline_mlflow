@@ -2,7 +2,7 @@ import mlflow
 import numpy as np
 import pandas as pd
 
-from src.dataset import TextClassificationDataset
+from src.text_classification.dataset import TextClassificationDataset
 
 
 def process_texts(texts, tokenizer, config):

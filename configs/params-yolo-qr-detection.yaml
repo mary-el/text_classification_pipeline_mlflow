@@ -1,0 +1,23 @@
+model:
+  name: "models/qr-detection/best"
+  register_name: "yolov8n-qr-detection"
+  pretrained: True
+
+data:
+  workspace: "lihang-xu"
+  project: "qr-code-oerhe"
+  version: 1
+  model_format: "yolov8"
+  location: "data/qr-detection"
+
+training:
+  epochs: 1
+  batch: 8
+  imgsz: 640
+  device: "cuda"
+  patience: 100
+  lr0: 0.01
+
+logging:
+  uri: "http://localhost:5000"
+  experiment_name: "yolo-qr-code-detection"
