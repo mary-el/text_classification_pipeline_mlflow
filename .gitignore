@@ -6,3 +6,5 @@ results/
 *.png
 .idea
 */__pycache__/
+models/
+results*
