@@ -19,7 +19,7 @@ def train_model(model, train_data, val_data, config):
         weight_decay=float(config["training"]["weight_decay"]),
         save_total_limit=int(config["training"]["save_total_limit"]),
         logging_dir=config["training"]["logs"],
-        metric_for_best_model="f1",
+        metric_for_best_model=config["training"].get(["metric_for_best_model"], "f1"),
         report_to="mlflow",
         load_best_model_at_end=True,
     )

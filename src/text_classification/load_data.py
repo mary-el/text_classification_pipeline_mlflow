@@ -26,7 +26,6 @@ def load_data(tokenizer, config):
     if "split_column" in config["data"]:  # если сплит не задан, задаём сами
         split_column = config["data"]["split_column"]
     else:
-        print("Creating split")
         split_column = "split"
         df[split_column] = np.random.choice(['train', 'val', 'test'], len(df), p=[0.7, 0.2, 0.1])
 

@@ -10,9 +10,11 @@ from sklearn.metrics import (
     recall_score,
     f1_score,
     confusion_matrix,
-    classification_report
+    classification_report,
+    fbeta_score
 )
 from torch.utils.data import DataLoader
+import torch
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -23,9 +25,10 @@ def compute_metrics(eval_pred):
 
     return {
         "accuracy": accuracy_score(labels, predictions),
-        "precision": precision_score(labels, predictions, average="weighted"),
-        "recall": recall_score(labels, predictions, average="weighted"),
-        "f1": f1_score(labels, predictions, average="weighted"),
+        "precision": precision_score(labels, predictions, average="macro"),
+        "recall": recall_score(labels, predictions, average="macro"),
+        "f1": f1_score(labels, predictions, average="macro"),
+        "fbeta": fbeta_score(labels, predictions, average="macro", beta=0.5,)
     }
 
 
@@ -51,9 +54,10 @@ def evaluate_model(model, test_dataset, config):
     # Вычисление метрик
     metrics = {
         "test_accuracy": accuracy_score(y_test, y_pred),
-        "test_precision": precision_score(y_test, y_pred, average="weighted"),
-        "test_recall": recall_score(y_test, y_pred, average="weighted"),
-        "test_f1": f1_score(y_test, y_pred, average="weighted"),
+        "test_precision": precision_score(y_test, y_pred, average="macro"),
+        "test_recall": recall_score(y_test, y_pred, average="macro"),
+        "test_f1": f1_score(y_test, y_pred, average="macro"),
+        "test_fbeta": fbeta_score(y_test, y_pred, average="macro", beta=0.5)
     }
 
     # Логирование метрик в MLflow

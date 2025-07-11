@@ -2,6 +2,7 @@ import torch
 from torch.utils.data import Dataset
 
 
+
 class TextClassificationDataset(Dataset):
     def __init__(self, encodings, labels, classes):
         self.encodings = encodings
