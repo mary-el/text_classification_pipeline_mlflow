@@ -1,5 +1,7 @@
 import time
 
+from functools import partial
+
 import mlflow
 from transformers import Trainer, TrainingArguments
 from transformers.integrations import MLflowCallback
@@ -19,17 +21,20 @@ def train_model(model, train_data, val_data, config):
         weight_decay=float(config["training"]["weight_decay"]),
         save_total_limit=int(config["training"]["save_total_limit"]),
         logging_dir=config["training"]["logs"],
-        metric_for_best_model=config["training"].get(["metric_for_best_model"], "f1"),
+        metric_for_best_model=config["training"]["metric_for_best_model"],
         report_to="mlflow",
         load_best_model_at_end=True,
     )
+
+    compute_metrics_partial = partial(compute_metrics, other_class=config["training"].get("other_class", None),
+                              beta=config["training"].get("beta", 1))
 
     trainer = Trainer(
         model=model,
         args=training_args,
         train_dataset=train_data,
         eval_dataset=val_data,
-        compute_metrics=compute_metrics,
+        compute_metrics=compute_metrics_partial,
         callbacks=[MLflowCallback()]
     )
     mlflow.log_params({**config["training"], **config["data"], **config["model"]})

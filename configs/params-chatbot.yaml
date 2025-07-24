@@ -1,16 +1,19 @@
 model:
-  pretrained_name: "cointegrated/rubert-tiny"
+  # pretrained_name: "cointegrated/rubert-tiny"
+  pretrained_name: "models/best_8c_tiny"  
   labels: ["errorClient", "operation", "other", "document", "sms", "vtbo", "cashback", "transfer"]
   save_to: models/best_8c_tiny
+  onnx_path: models/bert-chatbot-8c
 
 training:
   learning_rate: 2e-05
   batch_size: 64
-  num_epochs: 20
+  num_epochs: 0
   weight_decay: 0.01
   save_total_limit: 5  
   output_path: results_8c_tiny
   logs: logs
+  beta: 0.5
   metric_for_best_model: fbeta
 
 data:
@@ -20,7 +23,12 @@ data:
   split_column: "split"
   val_split: 0.2
   max_text_length: 512
+  other_class: 2
 
 logging:
   uri: "http://localhost:5000"
   experiment_name: "bert-text-classification-8c-tiny"
+
+evaluation:
+  thresholds: [0.9, 0.85, 0.5, 0.9, 0.6, 0.85, 0.05, 0.05]
+  results_path: "results/chatbot"
