@@ -16,7 +16,7 @@ from sklearn.metrics import (
 from torch.utils.data import DataLoader
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
-
+FBETA_LABELS = [0, 1, 3, 4, 5, 6, 7]
 
 def compute_metrics(eval_pred):
     logits, labels = eval_pred
@@ -24,10 +24,10 @@ def compute_metrics(eval_pred):
 
     return {
         "accuracy": accuracy_score(labels, predictions),
-        "precision": precision_score(labels, predictions, average="macro"),
-        "recall": recall_score(labels, predictions, average="macro"),
-        "f1": f1_score(labels, predictions, average="macro"),
-        "fbeta": fbeta_score(labels, predictions, average="macro", beta=0.5,)
+        "precision": precision_score(labels, predictions, average="weighted"),
+        "recall": recall_score(labels, predictions, average="weighted"),
+        "f1": f1_score(labels, predictions, average="weighted"),
+        "fbeta": fbeta_score(labels, predictions, average="weighted", beta=0.5, labels=FBETA_LABELS)
     }
 
 
@@ -53,10 +53,10 @@ def evaluate_model(model, test_dataset, config):
     # Вычисление метрик
     metrics = {
         "test_accuracy": accuracy_score(y_test, y_pred),
-        "test_precision": precision_score(y_test, y_pred, average="macro"),
-        "test_recall": recall_score(y_test, y_pred, average="macro"),
-        "test_f1": f1_score(y_test, y_pred, average="macro"),
-        "test_fbeta": fbeta_score(y_test, y_pred, average="macro", beta=0.5)
+        "test_precision": precision_score(y_test, y_pred, average="weighted"),
+        "test_recall": recall_score(y_test, y_pred, average="weighted"),
+        "test_f1": f1_score(y_test, y_pred, average="weighted"),
+        "test_fbeta": fbeta_score(y_test, y_pred, average="weighted", beta=0.5, labels=FBETA_LABELS)
     }
 
     # Логирование метрик в MLflow
@@ -66,7 +66,7 @@ def evaluate_model(model, test_dataset, config):
     mlflow.log_artifact('results.csv', artifact_path="reports")
     # Генерация и сохранение confusion matrix
     cm = confusion_matrix(y_test, y_pred)
-    save_confusion_matrix(cm, config['model']['labels'])
+    save_confusion_matrix(cm, config['model']['labels'])  
 
     # Логирование classification report
     report = classification_report(y_test, y_pred, output_dict=True, target_names=config['model']['labels'])

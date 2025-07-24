@@ -1,21 +1,20 @@
 model:
-#  pretrained_name: "cointegrated/rubert-tiny"
-  pretrained_name: "sergeyzh/rubert-tiny-turbo"
+  pretrained_name: "cointegrated/rubert-tiny"
   labels: ["errorClient", "operation", "other", "document", "sms", "vtbo", "cashback", "transfer"]
-  save_to: models/best_8c_turbo
+  save_to: models/best_8c_tiny
 
 training:
-  learning_rate: 2e-5
+  learning_rate: 2e-05
   batch_size: 64
   num_epochs: 20
   weight_decay: 0.01
-  save_total_limit: 5
-  output_path: results_8c
+  save_total_limit: 5  
+  output_path: results_8c_tiny
   logs: logs
   metric_for_best_model: fbeta
 
 data:
-  path: "data/df_8c_aug.csv"
+  path: "data/df_8c_14k_aug.csv"
   text_column: "text"
   label_column: "label"
   split_column: "split" 
@@ -24,4 +23,4 @@ data:
 
 logging:
   uri: "http://localhost:5000"
-  experiment_name: "bert-text-classification-aug-8c-turbo"
+  experiment_name: "bert-text-classification-8c-tiny"
