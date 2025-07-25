@@ -16,13 +16,30 @@ start-mlflow.cmd
 * model
   * pretrained_name - hf/local model
   * labels - list of classnames
-  * save_to
+  * save_to - path to save the best checkpoint
+  * onnx_path - path to save model in ONNX format
+
 * data
   * path - path to csv dataframe
   * text_column
   * label_column
   * split_column (optional)
-* training
+  * other class - "other" class number
+
+* training 
+  * learning_rate 
+  * batch_size 
+  * num_epochs 
+  * weight_decay 
+  * save_total_limit 
+  * output_path - path to checkpoints folder 
+  * logs 
+  * beta - beta value for f-beta 
+  * metric_for_best_model - name of metric to track
+
+* evaluation
+  * thresholds - minimal probabilities for each class 
+  * results_path - path to save charts and statistics
 
 ### yolo
 * model
