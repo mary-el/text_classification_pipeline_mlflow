@@ -10,6 +10,15 @@ from src.mlflow_logging import setup_mlflow
 from src.utils import load_config
 
 
+
+def on_fit_epoch_end(trainer):
+    metrics = trainer.metrics
+    epoch = trainer.epoch
+    for key, value in metrics.items():
+        if isinstance(value, (int, float)):
+            metric_name = re.sub(key, r'[^a-zA-Z0-9_-./ ]', ' ')
+            mlflow.log_metric(metric_name, value, step=epoch)
+
 def main(config_path: str, eval: bool = False):
     load_dotenv()
     settings.update({"mlflow": True})
@@ -27,6 +36,8 @@ def main(config_path: str, eval: bool = False):
     with mlflow.start_run():
         run = mlflow.active_run()
         os.environ["MLFLOW_RUN"] = run.info.run_name
+        
+        mlflow.log_params({**config["training"], **config["data"], **config["model"]})
 
         # Загрузка модели
         if pretrained:
@@ -35,11 +46,17 @@ def main(config_path: str, eval: bool = False):
             model = YOLO(f'{model_name}.yaml')  # Создание новой модели из конфига
         if not eval:
             # Обучение модели
-            results = model.train(
-                data=data_path,
-                verbose=True,
-                **train_params
-            )
+            model.add_callback("on_fit_epoch_end", on_fit_epoch_end)
+
+            if 'settings' in train_params:
+                mlflow.log_artifact(train_params['settings'], "settings")   # задан файл с настройками
+                results = model.train(cfg=train_params['settings'])
+            else:
+                results = model.train(
+                    data=data_path,
+                    verbose=True,
+                    **train_params
+                )
 
             # Логирование метрик
             for metric_name, metric_values in results.results_dict.items():
@@ -49,10 +66,18 @@ def main(config_path: str, eval: bool = False):
                 elif isinstance(metric_values, dict):
                     for k, v in metric_values.items():
                         mlflow.log_metric(f"{metric_name}_{k}", v)
-
+            
             # Логирование артефактов
-            mlflow.log_artifact(os.path.join(model.trainer.save_dir, 'weights/best.pt'), 'model')
+            mlflow.log_artifact(results.save_dir / "weights" / "best.pt", 'model')
             mlflow.log_artifact(config_path, 'config')
+            
+            # Логирование графиков обучения
+            plots_dir = results.save_dir / "plots"
+            if plots_dir.exists():
+                for plot in plots_dir.glob("*.png"):
+                    mlflow.log_artifact(plot, "plots")
+            
+
             # Логирование модели в MLflow Model Registry
             mlflow.pytorch.log_model(
                 pytorch_model=model.model,
@@ -60,7 +85,10 @@ def main(config_path: str, eval: bool = False):
                 registered_model_name=model_register_name,
                 # input_example=np.ndarray((3, imgsz, imgsz), dtype=float)
             )
-            print(f"Обучение завершено. Результаты сохранены в MLflow: {mlflow.get_artifact_uri()}")
+            
+            onnx_path = model.export(format="onnx")
+            print(f"Обучение завершено. Результаты сохранены в MLflow: {mlflow.get_artifact_uri()}. ONNX модель: {onnx_path}")
+
         metrics = model.val(
             data=data_path,
             split="test",
@@ -77,6 +105,7 @@ def main(config_path: str, eval: bool = False):
             "test_recall": metrics.box.r.mean(),
             "test_f1": metrics.box.f1.mean()
         })
+        
 
 
 if __name__ == "__main__":

@@ -55,6 +55,7 @@ start-mlflow.cmd
   * location
 
 * training: 
+  * settings - .yaml file with thaining config; or you can list parameters you need:
   * https://docs.ultralytics.com/modes/train/#train-settings
 
 ## Download dataset (for YOLO)

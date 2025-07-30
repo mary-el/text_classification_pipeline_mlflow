@@ -1,0 +1,18 @@
+model:
+  name: "yolov8n"
+  register_name: "yolov8n-stamp-detection"
+  pretrained: True
+
+data:
+  workspace: "mpilyugina"
+  project: "stamps_and_signatures"
+  version: 4
+  model_format: "yolov8"
+  location: "data/stamp-detection"
+
+training:
+  settings: data/stamp-detection/settings.yaml
+
+logging:
+  uri: "http://localhost:5000"
+  experiment_name: "yolo-stamp-detection"
